@@ -1,0 +1,14 @@
+<div class="container" style="margin-top: 70px; margin-left: 220px; border-block-style: initial">
+  <div class="form sign-in" style="margin-left: 120px; margin-top: 100px;">
+    <h2 style="font-style: bolt; font-size: 30px; color: blue">Login</h2>
+    <br />
+    <form [formGroup]="formLogin">
+    <label> <span>Email</span> <input type="username" id="username" [(ngModel)]="login.username"
+      formControlName="username"/>  </label>
+    <label> <span>Senha</span> <input type="password" id="password" [(ngModel)]="login.password"
+      formControlName="password"/> </label>
+    </form>
+    <button (click)="sendSaveRequest()" type="button" class="submit" style="background-color: blue">Sign In</button>
+  </div>
+</div>
+  

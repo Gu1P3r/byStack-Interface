@@ -1,0 +1,143 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-8">
+        <div style="margin-left: 50px;" class="card">
+          <div class="card-header" style="background-color: #132235">
+            <h4 style="color: #6ddad3" class="card-title">Cadastro de Cliente</h4>
+          </div>
+          <div class="card-body">
+            <form [formGroup]="formCliente">
+              <div class="row">
+                <div hidden class="col-md-12">
+                  <mat-form-field class="example-full-width">
+                    <input matInput placeholder="id" type="number" id="id" [(ngModel)]="cliente.id"
+                      formControlName="id">
+                  </mat-form-field>
+                </div>
+                <div class="col-md-12">
+                  <mat-form-field class="example-full-width">
+                    <input matInput placeholder="Nome" type="text" id="nome" [(ngModel)]="cliente.nome"
+                      formControlName="nome">
+                  </mat-form-field>
+                </div>
+
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <div formGroupName="tipo_cliente">
+                      <mat-form-field>
+                        <mat-label>Tipo Cliente</mat-label>
+                        <mat-select matNativeControl formControlName="id" [(ngModel)]="cliente.tipo_cliente.id" (ngModelChange)="changed($event)" id="tipo">
+                          <mat-option>Selecione um tipo...</mat-option>
+                          <mat-option *ngFor="let tipo_cliente of tipo_clientes" value="{{tipo_cliente.id}}">{{tipo_cliente.descricao}}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-6">
+                  <mat-form-field class="example-full-width">
+                    <input matInput placeholder="Data de Nascimento" type="date" id="data_nascimento"
+                      [(ngModel)]="cliente.data_nascimento" formControlName="data_nascimento">
+                  </mat-form-field>
+                </div>
+                <div class="col-md-6">
+                  <mat-form-field class="example-full-width">
+                    <input matInput placeholder="Telefone" type="text" id="telefone" [(ngModel)]="cliente.telefone"
+                      formControlName="telefone" [textMask]="{mask: tel}">
+                  </mat-form-field>
+                </div>
+                <div class="col-md-6">
+                  <mat-form-field class="example-full-width">
+                    <input matInput placeholder="CPF/CNPJ" type="text" id="cpf" [(ngModel)]="cliente.cpf"
+                      formControlName="cpf" [textMask]="{mask: mcpf}">
+                  </mat-form-field>
+                </div>
+
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <div formGroupName="endereco">
+                      <mat-form-field>
+                        <mat-label>Endereco</mat-label>
+                        <mat-select matNativeControl formControlName="id" [(ngModel)]="cliente.endereco.id">
+                          <mat-option>Selecione um endereco...</mat-option>
+                          <mat-option *ngFor="let endereco of enderecos" value="{{endereco.id}}">{{endereco.logradouro}}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <button mat-raised-button type="submit" style="background-color: #132235; width: 100%;" [disabled]="!formCliente.valid"
+                class="btn pull-right" (click)="sendSaveRequest()">Salvar</button>
+              <div class="clearfix"></div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <br />
+
+      <div class="col-md-8" style="margin-left: 50px;">
+        <div class="card" id="listaClientes" style="border: none;">
+          <div class="header">
+            <h4 class="title" style="margin-left: 20px;">Clientes</h4>
+          </div>
+          <form>
+            <input matInput style="background-color: #f7f7f8; width:20%; height: 30px; margin-left: 15px;" (keyup)="applyFilter($event.target.value)" placeholder="">
+          </form>
+
+          <br />
+          <mat-table id="tabelaCliente" [dataSource]="dataSource" matSort>
+
+            <ng-container matColumnDef="cod">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> Id </mat-header-cell>
+              <mat-cell *matCellDef="let row">{{ row.id }}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="nome">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> Nome </mat-header-cell>
+              <mat-cell *matCellDef="let row">{{ row.nome }}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="cpf">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> CPF </mat-header-cell>
+              <mat-cell *matCellDef="let row">{{ row.cpf }}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="telefone">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> Telefone </mat-header-cell>
+              <mat-cell *matCellDef="let row">{{ row.telefone }}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="tipo_cliente">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> tipo cliente </mat-header-cell>
+                <mat-cell *matCellDef="let row">{{ row.tipo_cliente.descricao }}</mat-cell>
+              </ng-container>
+
+            <ng-container matColumnDef="editar">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> Editar </mat-header-cell>
+              <mat-cell *matCellDef="let row" (click)="editar(row)"><button type="button" id="btnEditar"
+                  class="btn btn-info pull-center">Editar</button></mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="excluir">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> Excluir </mat-header-cell>
+              <mat-cell *matCellDef="let row" (click)="excluir(row)"><button id="btnExcluir" type="button"
+                  class="btn btn-info pull-center">Excluir</button></mat-cell>
+            </ng-container>
+
+            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+
+          </mat-table>
+
+          <mat-paginator [pageSizeOptions]="[5, 10, 20, 100]"></mat-paginator>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

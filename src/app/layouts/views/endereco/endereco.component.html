@@ -1,0 +1,135 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-8">
+        <div style="margin-left: 50px;" class="card">
+          <div class="card-header" style="background-color: #132235">
+            <h4 style="color: #6ddad3" class="card-title">Cadastro de Endereços</h4>
+          </div>
+          <div class="card-body">
+            <form [formGroup]="formEndereco">
+              <div class="row">
+                <div hidden class="col-md-12">
+                  <mat-form-field class="example-full-width">
+                    <input matInput placeholder="id" type="number" id="id" [(ngModel)]="endereco.id"
+                      formControlName="id">
+                  </mat-form-field>
+                </div>
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <div formGroupName="cidade">
+                      <mat-form-field>
+                        <mat-label>Cidade</mat-label>
+                        <mat-select matNativeControl formControlName="id" [(ngModel)]="endereco.cidade.id">
+                          <mat-option>Selecione uma cidade...</mat-option>
+                          <mat-option *ngFor="let cidade of cidades" value="{{cidade.id}}">
+                            {{cidade.nome}}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-12">
+                  <mat-form-field class="example-full-width">
+                    <input matInput placeholder="Logradouro" type="text" id="logradouro"
+                      [(ngModel)]="endereco.logradouro" formControlName="logradouro">
+                  </mat-form-field>
+                </div>
+                <div class="col-md-12">
+                  <mat-form-field class="example-full-width">
+                    <input matInput placeholder="Bairro" type="text" id="bairro" [(ngModel)]="endereco.bairro"
+                      formControlName="bairro">
+                  </mat-form-field>
+                </div>
+
+                <div class="col-md-6">
+                  <mat-form-field class="example-full-width">
+                    <input matInput placeholder="CEP" type="text" id="cep" [(ngModel)]="endereco.cep"
+                      formControlName="cep" [textMask]="{mask: mcep}">
+                  </mat-form-field>
+                </div>
+
+                <div class="col-md-6">
+                  <mat-form-field class="example-full-width">
+                    <input matInput placeholder="Numero" type="number" id="numero" [(ngModel)]="endereco.numero"
+                      formControlName="numero">
+                  </mat-form-field>
+                </div>
+
+                <button mat-raised-button type="submit" style="background-color: #132235; width: 100%;"
+                  [disabled]="!formEndereco.valid" class="btn pull-right" (click)="sendSaveRequest()">Salvar</button>
+                <div class="clearfix"></div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="col-md-8" style="margin-left: 50px;">
+        <div class="card" id="listaEnderecos" style="border: none;">
+          <div class="header">
+            <h4 class="title" style="margin-left: 20px;">Enderecos</h4>
+          </div>
+          <form>
+            <input matInput style="background-color: #f7f7f8; width:20%; height: 30px; margin-left: 15px;"
+              (keyup)="applyFilter($event.target.value)" placeholder="">
+          </form>
+          <br />
+
+          <mat-table id="tabelaendereco" [dataSource]="dataSource" matSort>
+
+            <ng-container matColumnDef="cod">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> Id </mat-header-cell>
+              <mat-cell *matCellDef="let row">{{ row.id }}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="cep">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> CEP </mat-header-cell>
+              <mat-cell *matCellDef="let row">{{ row.cep }}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="bairro">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> Bairro </mat-header-cell>
+              <mat-cell *matCellDef="let row">{{ row.bairro }}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="logradouro">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> Logradouro </mat-header-cell>
+              <mat-cell *matCellDef="let row">{{ row.logradouro }}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="cidade">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> Cidade </mat-header-cell>
+              <mat-cell *matCellDef="let row">{{ row.cidade.nome }}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="numero">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> Numero </mat-header-cell>
+              <mat-cell *matCellDef="let row">{{ row.numero }}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="editar">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> Editar </mat-header-cell>
+              <mat-cell *matCellDef="let row" (click)="editar(row)"><button type="button" id="btnEditar"
+                  class="btn btn-info pull-center">Editar</button></mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="excluir">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> Excluir </mat-header-cell>
+              <mat-cell *matCellDef="let row" (click)="excluir(row)"><button id="btnExcluir" type="button"
+                  class="btn btn-info pull-center">Excluir</button></mat-cell>
+            </ng-container>
+
+            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+
+          </mat-table>
+          <mat-paginator [pageSizeOptions]="[5, 10, 20, 100]"></mat-paginator>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
